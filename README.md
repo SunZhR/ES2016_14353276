@@ -73,7 +73,7 @@
     
     *-Succesful Result:*
     
-    ![result1](http://p1.bqimg.com/4851/56e4402c7e18c07f.jpg)
+    ![result1](http://p1.bpimg.com/4851/fd364d9614285ff3.png)
     
     *-Explain By Flow Chart:*
     
