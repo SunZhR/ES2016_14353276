@@ -1,0 +1,113 @@
+# ROS
+***
+### What is ROS
+The Robot Operating System (ROS) is a set of software libraries and tools that help you build robot applications. 
+
+### Installation
+ 1. Configure your Ubuntu repositories
+ 2. Setup your sources.list
+ 
+    >sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+ 3. Set up your keys
+ 
+    >sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 0xB01FA116
+ 4. Installation
+ 
+    >sudo apt-get update    
+    >sudo apt-get install ros-jade-desktop-full
+ 5. Initialize rosdep
+ 
+    >sudo rosdep init   
+    >rosdep update
+ 6. Environment setup
+ 
+    >echo "source /opt/ros/jade/setup.bash" >> ~/.bashrc
+    >source ~/.bashrc
+ 7. Getting rosinstall
+ 
+    >sudo apt-get install python-rosinstall
+
+### Some Information
+![ros1](http://p1.bpimg.com/567571/54e3f054f057c2c1.png)
+
+![ros2](http://p1.bpimg.com/567571/975f8a547f71a35f.png)
+
+# Cartographer
+***
+
+### What is Cartographer
+
+Cartographer is a system that provides real-time simultaneous localization and mapping (SLAM) in 2D and 3D across multiple platforms and sensor configurations. 
+
+### Building & Installation
+
+1. 安装所有依赖项
+
+    >sudo apt-get install -y google-mock libboost-all-dev  libeigen3-dev libgflags-dev libgoogle-glog-dev liblua5.2-dev libprotobuf-dev  libsuitesparse-dev libwebp-dev ninja-build protobuf-compiler python-sphinx  ros-indigo-tf2-eigen libatlas-base-dev libsuitesparse-dev liblapack-dev
+2. 首先安装ceres solver，选择的版本是1.11,路径随意
+
+    >git clone https://github.com/hitcm/ceres-solver-1.11.0.git     
+    >cd ceres-solver-1.11.0/build   
+    >cmake ..   
+    >make   
+    >sudo make install
+    
+3. 然后安装 cartographer,路径随意
+
+    >git clone https://github.com/hitcm/cartographer.git    
+    >mkdir build    
+    >cd cartographer/build  
+    > cmake .. -G Ninja     
+    >ninja  
+    >ninja test 
+    >sudo ninja install 
+    
+4. 安装catkin_ws
+    
+    >#Install wstool and rosdep.   
+    >sudo apt-get update    
+    >sudo apt-get install -y python-wstool python-rosdep ninja-build    
+
+    >#Create a new workspace in 'catkin_ws'.    
+    >mkdir catkin_ws    
+    >cd catkin_ws   
+    >wstool init src
+    
+    >#Merge the cartographer_ros.rosinstall file and fetch code for dependencies.   
+    >wstool merge -t src https://raw.githubusercontent.com/googlecartographer/cartographer_ros/master/cartographer_ros.rosinstall     
+    >wstool update -t src
+    
+    >#Install deb dependencies.     
+    >rosdep init    
+    >rosdep update  
+    >rosdep install --from-paths src --ignore-src --rosdistro=${ROS_DISTRO} -y
+5. 安装cartographer_ros。
+    
+    >cd src     
+    >git clone https://github.com/hitcm/cartographer_ros.git    
+    >catkin_make
+6. 数据下载测试
+    
+    > #下载数据  
+    >https://storage.googleapis.com/cartographer-public-data/bags/backpack_2d/cartographer_paper_deutsches_museum.bag     
+    >https://storage.googleapis.com/cartographer-public-data/bags/backpack_3d/cartographer_3d_deutsches_museum.bag    
+    >#运行launch文件即可     
+    >roslaunch cartographer_ros demo_backpack_2d.launch bag_filename:=${HOME}/Downloads/cartographer_paper_deutsches_museum.bag
+    >roslaunch cartographer_ros demo_backpack_3d.launch bag_filename:=${HOME}/Downloads/cartographer_3d_deutsches_museum.bag
+
+### Result
+
+安装cartographer的ninja
+![cart1](http://p1.bqimg.com/567571/e760230584238b04.png)
+
+测试cartographer的ninja test
+![cart2](http://p1.bqimg.com/567571/5fc4eafd9434e8fe.png)
+    
+sudo ninja install
+![cart3](http://p1.bqimg.com/567571/93f767fdf8fb4797.png)
+
+2d结果：
+![cart_2d](http://p1.bqimg.com/567571/ed6c9f7c1e76aa61.png)
+
+3d结果：
+![cart_3d](http://p1.bqimg.com/567571/565cba33c03ddb04.png)
